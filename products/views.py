@@ -3,14 +3,14 @@ from rest_framework.decorators import api_view
 from drf_spectacular.utils import extend_schema
 from .models import Product
 from .serializers import ProductSerializer
+from django.db.models import QuerySet
 
 @extend_schema(operation_id="products_list")
 @api_view(['GET'])
 def product_list_view(request):
-    serializer = ProductSerializer(data=list(Product.objects.all()), many=True)
-    if serializer.is_valid():
-        return Response(serializer.data)
-    return Response(serializer.errors, status=400)
+    q = QuerySet()
+    serializer = ProductSerializer(q, many=True)
+    return Response(serializer.data)
 
 @extend_schema(operation_id="product_detail")
 @api_view(['GET'])
